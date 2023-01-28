@@ -1,0 +1,225 @@
+<template>
+    <div class="icon-wrapper clock-icon relative">
+        <vue-feather size="16" type="clock" />
+        <div id="clock-menu" class="rounded-lg">
+            <div class="clock-menu-header py-4 rounded-t-lg flex justify-center items-center">
+                <vue-feather size="16" type="clock" />
+                <p class="ml-2">Hẹn giờ tắt</p>
+            </div>
+            <div class="p-6 text-center" v-if="!countDownActive">
+                <div class="input-container mb-4">
+                    <div class="relative flex items-center">
+                        <input
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                            v-model="hour"
+                            id="hour"
+                            type="text"
+                            pattern="[0-9]{10}"
+                            maxlength="2"
+                            placeholder="00"
+                            class="w-20 pr-6"
+                        />
+                        <label for="hour" class="absolute right-4 text-sm opacity-60">Giờ</label>
+                    </div>
+                    <span class="mx-2 font-bold">:</span>
+                    <div class="relative flex items-center">
+                        <input
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                            v-model="min"
+                            id="min"
+                            type="text"
+                            pattern="[0-9]{10}"
+                            maxlength="2"
+                            placeholder="00"
+                            class="w-24 pr-14"
+                        />
+                        <label for="min" class="absolute right-4 text-sm opacity-60">Phút</label>
+                    </div>
+                </div>
+                <div class="mb-4" v-if="min || hour">
+                    <p class="mb-2 font-bold text-sm">Nhạc dừng phát lúc:</p>
+                    <p>{{ timeFormat(timeToUpdate) }}</p>
+                </div>
+                <div class="mt-4">
+                    <button :class="['start-btn', { disabled: !hour && !min }]" @click="startCountdown">Bắt đầu</button>
+                </div>
+            </div>
+            <div class="p-6 text-center" v-if="countDownActive">
+                <div>
+                    <p class="mb-2 font-bold text-sm">Nhạc dừng phát lúc:</p>
+                    <p>{{ timeFormat(timeEnd) }}</p>
+                </div>
+                <div class="mt-4">
+                    <button class="stop-btn" @click="stopCountdown">Dừng hẹn</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { mapState as mapMusicState } from "@/store/helper/music";
+import { mapMutations as mapMusicMutations } from "@/store/helper/music";
+import { mapActions as mapMusicActions } from "@/store/helper/music";
+
+export default {
+    data: function () {
+        return {
+            hour: "",
+            min: "",
+            timeToUpdate: "",
+            realTimestamp: "",
+        };
+    },
+    created: function () {
+        setInterval(() => {
+            this.realTimestamp = Date.now();
+        }, 1000);
+    },
+    computed: { ...mapMusicState(["countDownActive", "timeEnd"]) },
+    methods: {
+        ...mapMusicActions(["handlePause"]),
+        ...mapMusicMutations(["set_count_down_active", "set_time_end"]),
+        timeFormat: function (time) {
+            let timeStamp = new Date(time);
+            let hour = timeStamp.getHours() < 10 ? "0" + timeStamp.getHours() : timeStamp.getHours();
+            let min = timeStamp.getMinutes() < 10 ? "0" + timeStamp.getMinutes() : timeStamp.getMinutes();
+            let sec = timeStamp.getSeconds() < 10 ? "0" + timeStamp.getSeconds() : timeStamp.getSeconds();
+            let day = timeStamp.getDate() < 10 ? "0" + timeStamp.getDate() : timeStamp.getDate();
+            let month = timeStamp.getMonth() + 1 < 10 ? "0" + (timeStamp.getMonth() + 1) : timeStamp.getMonth() + 1;
+            let year = timeStamp.getFullYear();
+            let fullDateString = `${day}/${month}/${year}`;
+            return `${hour}:${min}:${sec} - ${fullDateString}`;
+        },
+        startCountdown: function () {
+            if (this.hour || this.min) {
+                this.set_time_end(this.timeToUpdate);
+                this.set_count_down_active(true);
+            }
+        },
+        stopCountdown: function () {
+            if (this.countDownActive) {
+                this.hour = "";
+                this.min = "";
+                this.timeToUpdate = "";
+                this.set_time_end(0);
+                this.set_count_down_active(false);
+            }
+        },
+    },
+    watch: {
+        min: function (min) {
+            this.timeToUpdate = Date.now().valueOf() + (this.hour || 0) * 60 * 60000 + min * 60000;
+        },
+        hour: function (hour) {
+            this.timeToUpdate = Date.now().valueOf() + hour * 60 * 60000 + (this.min || 0) * 60000;
+        },
+        realTimestamp: function (value) {
+            if (this.countDownActive) {
+                if (value > this.timeEnd - 1000) {
+                    this.handlePause();
+                    this.stopCountdown();
+                }
+            }
+        },
+    },
+};
+</script>
+
+<style scoped>
+.icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff33;
+    border-radius: 100%;
+    padding: 8px;
+}
+#clock-menu {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 8px;
+    width: 300px;
+    min-height: 150px;
+    z-index: 10;
+    background: var(--menu-panel-color);
+    box-shadow: 0 3px 6px 0px rgb(0 0 0 / 50%);
+}
+.clock-icon:hover #clock-menu {
+    display: block;
+}
+#clock-menu:hover {
+    display: block;
+}
+.clock-menu-header {
+    background: var(--gradient-01);
+}
+.input-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding: 24px 0;
+    font-size: 1.4rem;
+    background: var(--body-color);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input-container input {
+    border: none;
+    outline: none;
+    padding: 2px 8px;
+    border-bottom: 1px solid red;
+    background-image: none;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-bottom: 1px solid gray;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+.input-container input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.input-container input:focus {
+    outline: none;
+    border-bottom: 1px solid #3fffcc;
+}
+.stop-btn {
+    background: #cb5a5a;
+    padding: 6px 8px;
+    width: 100%;
+    border-radius: 6px;
+    transition: all linear 0.2s;
+}
+.stop-btn:hover {
+    background: #ae5454;
+}
+.start-btn {
+    background: #389081;
+    padding: 6px 8px;
+    width: 100%;
+    border-radius: 6px;
+    transition: all linear 0.2s;
+}
+.start-btn {
+    background: #389081;
+    padding: 6px 8px;
+    width: 100%;
+    border-radius: 6px;
+    transition: all linear 0.2s;
+}
+.start-btn:hover {
+    background: cadetblue;
+}
+.start-btn.disabled,
+.start-btn.disabled:hover {
+    cursor: default;
+    background: #8f9695;
+}
+</style>
