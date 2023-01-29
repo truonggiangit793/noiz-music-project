@@ -43,7 +43,9 @@ module.exports = {
     getNowTimeStamp: () => new Date().valueOf(),
     scrollToView: function ({ target = 0 }) {
         let element = document.querySelector(`[target_id=${target}]`);
+        let nav_left_id = document.querySelector(`[nav_left_id=${target}]`);
         element ? element.scrollIntoView({ behavior: "smooth", block: "center" }) : undefined;
+        nav_left_id ? nav_left_id.scrollIntoView({ behavior: "smooth", block: "center" }) : undefined;
     },
     test: function (s) {
         let h = Math.floor(s / 3600);

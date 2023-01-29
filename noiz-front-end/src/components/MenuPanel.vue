@@ -101,8 +101,8 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    mask-image: linear-gradient(to bottom, transparent 0%, black 2%, black 100%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 2%, black 100%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 2%, black 98%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 2%, black 98%, transparent 100%);
 }
 .scroller::-webkit-scrollbar,
 .scroller::-webkit-scrollbar-thumb {

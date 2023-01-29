@@ -5,7 +5,9 @@
         <div class="hover-overlay" v-if="!playing">
             <water-mark :styles="{ background: 'orange', opacity: 0.8, color: 'black', fontSize: '0.8rem' }" v-if="disabled">VIP</water-mark>
             <div v-else @click="handleClick" class="icon">
-                <vue-feather type="play" />
+                <div class="icon-transform">
+                    <vue-feather type="play" :size="iconSize" />
+                </div>
             </div>
         </div>
         <div id="sound-wave" :class="{ active: playing }">
@@ -22,6 +24,7 @@ export default {
         data: {},
         image: { type: String, default: null },
         index: { type: Number, default: 0 },
+        iconSize: { type: Number, default: 20 },
         disabled: { type: Boolean, default: false },
         element: { type: Object, default: null },
         playing: { type: Boolean, default: false },
@@ -72,14 +75,16 @@ export default {
 .icon {
     border: 1px solid;
     border-radius: 100px;
-    width: 3.1rem;
-    height: 3.1rem;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all linear 0.2s;
-    padding-left: 4px;
+}
+.icon .icon-transform {
+    transform: translateX(1px);
+    display: flex;
 }
 .image-wrapper img {
     transition: all linear 0.2s;

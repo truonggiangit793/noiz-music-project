@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center select-none">
         <p class="flex justify-start items-center">{{ timeFormat(getNowPlaying.currentTime || 0) }}</p>
         <div id="slider-bar" class="flex justify-center items-center relative w-full mx-1">
             <input type="range" :value="getNowPlaying.currentPercent" max="100" step="0.001" @input="handle_change_current_time" />

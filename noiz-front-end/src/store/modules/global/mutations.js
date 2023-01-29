@@ -8,4 +8,7 @@ export default {
     set_top100(state, value) {
         state.top100 = value;
     },
+    nav_toggle(state) {
+        state.navShown = !state.navShown;
+    },
 };

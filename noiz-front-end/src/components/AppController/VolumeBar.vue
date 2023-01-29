@@ -14,7 +14,7 @@
                 }"
             />
         </div>
-        <div class="flex items-center ml-2 cursor-pointer">
+        <div class="flex items-center ml-2 cursor-pointer" @click="nav_toggle">
             <vue-feather type="list" size="18" />
         </div>
     </div>
@@ -23,11 +23,13 @@
 <script>
 import { mapState as mapMusicState } from "@/store/helper/music";
 import { mapMutations as mapMusicMutations } from "@/store/helper/music";
+import { mapMutations as mapGlobalMutations } from "@/store/helper/global";
 
 export default {
     computed: { ...mapMusicState(["currentVolume", "lastVolume", "audio"]) },
     methods: {
         ...mapMusicMutations(["set_current_volume", "set_last_volume", "set_audio_volume"]),
+        ...mapGlobalMutations(["nav_toggle"]),
         handleChangeVolume: function (event) {
             let percent = event.target.value;
             this.set_current_volume(percent);
@@ -104,5 +106,11 @@ input[type="range"]::-ms-thumb {
     height: 3px;
     border: none;
     border-radius: 100px;
+}
+.speaker-icon {
+    transition: color 0.2s linear;
+}
+.speaker-icon:hover {
+    color: var(--hover-color);
 }
 </style>
