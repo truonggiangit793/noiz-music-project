@@ -1,0 +1,17 @@
+version: "3"
+services:
+    app:
+        build: ./noiz-front-end
+        container_name: vue-app
+        restart: always
+        environment:
+            - VUE_APP_API_URL=${VUE_APP_API_URL}
+        ports:
+            - "80:80"
+    api:
+        build: ./noiz-back-end
+        container_name: api-server
+        environment:
+            - PORT=${SERVER_PORT}
+        ports:
+            - ${SERVER_PORT}:${SERVER_PORT}
