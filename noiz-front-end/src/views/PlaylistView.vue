@@ -1,5 +1,5 @@
 <template>
-    <div class="seclect-none" v-if="playlist">
+    <div v-if="playlist">
         <div>
             <!-- App header -->
             <app-header />
