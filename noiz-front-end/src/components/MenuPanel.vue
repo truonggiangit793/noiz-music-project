@@ -34,6 +34,12 @@
                         <p class="ml-2">Top 100</p>
                     </router-link>
                 </div>
+                <div class="item">
+                    <router-link to="/favorite">
+                        <vue-feather size="20" type="heart" />
+                        <p class="ml-2">Favorite</p>
+                    </router-link>
+                </div>
             </div>
 
             <!-- Controller panel -->

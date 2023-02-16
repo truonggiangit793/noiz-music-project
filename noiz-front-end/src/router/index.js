@@ -6,6 +6,7 @@ const Top100View = () => import(/* webpackChunkName: "top100" */ "@/views/Top100
 const PlaylistView = () => import(/* webpackChunkName: "playlist" */ "@/views/PlaylistView");
 const ArtistView = () => import(/* webpackChunkName: "artist" */ "@/views/ArtistView");
 const MvView = () => import(/* webpackChunkName: "artist" */ "@/views/MvView");
+const FavoriteView = () => import(/* webpackChunkName: "test" */ "@/views/FavoriteView");
 const TestView = () => import(/* webpackChunkName: "test" */ "@/views/TestView");
 const NotFound = () => import(/* webpackChunkName: "404" */ "@/views/NotFound");
 
@@ -26,6 +27,11 @@ const menuRouters = [
         path: "/top100",
         name: "top100",
         component: Top100View,
+    },
+    {
+        path: "/favorite",
+        name: "favorite",
+        component: FavoriteView,
     },
     {
         path: "/test",

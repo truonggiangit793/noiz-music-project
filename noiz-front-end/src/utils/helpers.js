@@ -47,6 +47,18 @@ module.exports = {
         element ? element.scrollIntoView({ behavior: "smooth", block: "center" }) : undefined;
         nav_left_id ? nav_left_id.scrollIntoView({ behavior: "smooth", block: "center" }) : undefined;
     },
+    filterExist: function ({ origin, filter }) {
+        let result = [];
+        if (typeof origin != "object" || typeof filter != "object" || origin.length <= 0) return [];
+        let originEncodeId = origin.map((element) => element.encodeId);
+        result, originEncodeId;
+        filter.forEach((element) => {
+            if (!originEncodeId.includes(element.encodeId)) {
+                result.push(element);
+            }
+        });
+        return result;
+    },
     test: function (s) {
         let h = Math.floor(s / 3600);
         let m = Math.floor((s % 3600) / 60);

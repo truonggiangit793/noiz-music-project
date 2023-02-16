@@ -1,4 +1,4 @@
-import { apiRequest, randomRange, toCapitalize, scrollToView } from "@/utils/helpers";
+import { apiRequest, randomRange, toCapitalize, scrollToView, filterExist } from "@/utils/helpers";
 
 export default {
     handleSeeking: function ({ commit }, { time, percent }) {
@@ -6,17 +6,22 @@ export default {
         commit("set_current_time", time);
         commit("set_current_percent", percent);
     },
-    createSong: async function ({ commit, dispatch }, { $data, $target, $index }) {
+    createSong: async function ({ state, commit, dispatch }, { $data, $target, $index }) {
         dispatch("handlePause");
         commit("set_loading", true);
         await apiRequest(`song/${$target.encodeId}/details`).then(function (response) {
             if (response) {
+                let currentPlaylist = state.currentPlaylist;
+                let newPlaylist = $data;
                 commit("set_loading", false);
                 commit("set_current_time", 0);
                 commit("set_current_percent", 0);
-                commit("set_current_index", $index);
+                commit("set_current_index", currentPlaylist.length + $index);
                 commit("set_current_song", response);
-                commit("set_current_playlist", $data);
+                commit(
+                    "set_current_playlist",
+                    currentPlaylist.length <= 0 ? $data : currentPlaylist.concat(filterExist({ origin: currentPlaylist, filter: newPlaylist }))
+                );
                 dispatch("handlePlay");
             }
         });
