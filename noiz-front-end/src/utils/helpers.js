@@ -36,14 +36,12 @@ module.exports = {
     },
     getPlaylistSlug: (str = "") => str.split("/")[2],
     validSlugName: (str1, str2) => (str1.toString() === str2.toString() ? true : false),
-    checkNowPlaying: function (data) {
-        return data.currentSongId && data.currentSong.streaming.data ? true : false;
-    },
+    checkNowPlaying: (data) => (data.currentSongId && data.currentSong.streaming.data ? true : false),
     randomRange: (min, max) => Math.floor(Math.random() * (max - min) + min),
     getNowTimeStamp: () => new Date().valueOf(),
     scrollToView: function ({ target = 0 }) {
         let element = document.querySelector(`[target_id=${target}]`);
-        let nav_left_id = document.querySelector(`[nav_left_id=${target}]`);
+        let nav_left_id = document.querySelector(`[nav_list_id=${target}]`);
         element ? element.scrollIntoView({ behavior: "smooth", block: "center" }) : undefined;
         nav_left_id ? nav_left_id.scrollIntoView({ behavior: "smooth", block: "center" }) : undefined;
     },
@@ -51,12 +49,7 @@ module.exports = {
         let result = [];
         if (typeof origin != "object" || typeof filter != "object" || origin.length <= 0) return [];
         let originEncodeId = origin.map((element) => element.encodeId);
-        result, originEncodeId;
-        filter.forEach((element) => {
-            if (!originEncodeId.includes(element.encodeId)) {
-                result.push(element);
-            }
-        });
+        filter.forEach((element) => (!originEncodeId.includes(element.encodeId) ? result.push(element) : undefined));
         return result;
     },
     test: function (s) {

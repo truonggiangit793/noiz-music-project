@@ -1,5 +1,10 @@
 <template>
-    <section id="nav-left" :class="{ active: navShown }">
+    <section id="nav-list" :class="{ active: navShown }">
+        <div class="nav-toggle-tn">
+            <div class="toggle-container" @click="nav_toggle">
+                <vue-feather size="20" type="chevron-right" />
+            </div>
+        </div>
         <div class="sticky top-4 text-center m-4 flex justify-center">
             <div class="header py-2 px-4 mr-1">
                 <p>Danh sách phát</p>
@@ -9,9 +14,9 @@
             </div>
         </div>
         <div class="scroll-view">
-            <h1 class="text-center opacity-80 mt-4" v-if="currentPlaylist.lenght < 0">Danh sách trống</h1>
+            <h1 class="text-center opacity-80 mt-4" v-if="currentPlaylist.length < 0">Danh sách trống</h1>
             <div v-for="(item, index) in currentPlaylist" :key="index">
-                <div :class="['card', { active: getNowPlaying.currentSong.encodeId == item.encodeId }]" :nav_left_id="item.encodeId">
+                <div :class="['card', { active: getNowPlaying.currentSong.encodeId == item.encodeId }]" :nav_list_id="item.encodeId">
                     <div class="image">
                         <image-overlay
                             :iconSize="14"
@@ -58,6 +63,7 @@ import { mapState as mapGlobalState } from "@/store/helper/global";
 import { mapState as mapMusicState } from "@/store/helper/music";
 import { mapGetters as mapMusicGetters } from "@/store/helper/music";
 import { mapActions as mapMusicActions } from "@/store/helper/music";
+import { mapMutations as mapGlobalMutations } from "@/store/helper/global";
 
 export default {
     components: { ImageOverlay, TextTooltip, WaterMark },
@@ -69,27 +75,27 @@ export default {
     methods: {
         toCapitalize,
         ...mapMusicActions(["createSong"]),
+        ...mapGlobalMutations(["nav_toggle"]),
     },
 };
 </script>
 
 <style scoped>
-#nav-left {
+#nav-list {
     z-index: 50;
     position: fixed;
     top: 0;
     bottom: 0;
-    right: -400px;
+    right: -430px;
     transition: all 0.6s linear;
-    width: var(--menu-panel-width-lg);
+    width: 400px;
     height: 100vh;
-    overflow: hidden;
     background: var(--header-color);
     backdrop-filter: blur(20px);
     color: white;
     box-shadow: 0 0 12px 2px rgb(0 0 0 / 50%);
 }
-#nav-left.active {
+#nav-list.active {
     right: 0;
 }
 .header {
@@ -142,5 +148,23 @@ export default {
 }
 .card.active {
     background: #272937ab;
+}
+.nav-toggle-tn {
+    position: absolute;
+    height: 100%;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    left: -20px;
+}
+.toggle-container {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #c28e23;
+    padding: 40px 0px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 </style>

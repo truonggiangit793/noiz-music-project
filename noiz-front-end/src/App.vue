@@ -6,7 +6,7 @@
         <div id="main-container">
             <router-view />
         </div>
-        <nav-left />
+        <nav-list />
     </div>
 </template>
 
@@ -14,12 +14,12 @@
 import AppSplashing from "@/components/AppSplashing";
 import ConnectionDetector from "@/components/ConnectionDetector";
 import MenuPanel from "@/components/MenuPanel";
-import NavLeft from "@/components/NavLeft";
+import NavList from "@/components/NavList";
 import { mapActions as mapConnectionActions } from "@/store/helper/connection";
 import { mapActions as mapGlobalActions } from "@/store/helper/global";
 
 export default {
-    components: { AppSplashing, ConnectionDetector, MenuPanel, NavLeft },
+    components: { AppSplashing, ConnectionDetector, MenuPanel, NavList },
     methods: {
         ...mapConnectionActions(["connection_detector"]),
         ...mapGlobalActions(["init_home_data", "disabled_context_menu"]),
