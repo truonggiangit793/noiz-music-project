@@ -2,6 +2,7 @@ version: "3"
 services:
     app:
         build: ./noiz-front-end
+        image: noiz-front-end
         container_name: vue-app
         restart: always
         environment:
@@ -10,6 +11,7 @@ services:
             - "80:80"
     api:
         build: ./noiz-back-end
+        image: noiz-back-end
         container_name: api-server
         environment:
             - PORT=${SERVER_PORT}
